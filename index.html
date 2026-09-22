@@ -53,6 +53,64 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="login.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const alertContainer = document.getElementById('alertContainer');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const rememberMe = document.getElementById('rememberMe');
+
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            const rememberedUser = localStorage.getItem('rememberUser');
+            if (rememberedUser) {
+                usernameInput.value = rememberedUser;
+                rememberMe.checked = true;
+            }
+
+            function showAlert(message) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+            }
+
+            loginForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username || !password) {
+                    showAlert('Please enter both username and password.');
+                    return;
+                }
+
+                if (username.toLowerCase() === 'arjay' && password === 'arjay123') {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('loginTime', new Date().toISOString());
+
+                    if (rememberMe.checked) {
+                        localStorage.setItem('rememberUser', username);
+                    } else {
+                        localStorage.removeItem('rememberUser');
+                    }
+
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                showAlert('Invalid username or password. Use the demo account: arjay / arjay123');
+                passwordInput.value = '';
+            });
+        });
+    </script>
 </body>
 </html>
