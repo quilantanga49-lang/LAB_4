@@ -490,4 +490,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     renderSection('dashboard');
-});    
+});
